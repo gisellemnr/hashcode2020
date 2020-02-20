@@ -79,22 +79,27 @@ int main() {
 
   // Generate output file given the sorted libraries
   int days_spent = 0;
-  int i = 0;
-  while (days_spent < days && i < libs) {
-    lib l = libraries[i];
-    int id = l.id;
+  int num_libs = 0;
+  while (days_spent < days && num_libs < libs) {
+    lib l = libraries[num_libs];
+    num_libs++;
+    days_spent += l.delay;
+  }
 
+  cout << num_libs << endl;
+  days_spent = 0;
+  for (int i = 0; i < num_libs; i++) {
+    lib l = libraries[i];
+    days_spent += l.delay;
     int days_left = days - days_spent;
     int books_scanned = l.bpd * days_left;
     if (books_scanned > l.books.size()) books_scanned = l.books.size();
 
-    cout << id << " " << books_scanned << endl;
+    cout << l.id << " " << books_scanned << endl;
     for (int b = 0; b < books_scanned; b++) {
       cout << get<1>(l.books[b]) << " ";
     }
     cout << endl;
-
-    i++;
   }
 
   return 0;
