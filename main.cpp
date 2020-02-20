@@ -7,14 +7,17 @@ using namespace std;
 
 
 int score(lib l) {
+  /* Attempt 0
   int bpd = l.bpd;
-
   int maxday = 0;
-  for (int i = 0; i < bpd; i++) {
+  for (int i = 0; i < bpd && i < l.books.size(); i++) {
     maxday += get<0>(l.books[i]);
   }
-
   return maxday;
+  */
+
+  int s = (l.books.size() * l.bpd) / l.delay;
+  return s;
 }
 
 bool libCompare(const lib &l1, const lib &l2) {
