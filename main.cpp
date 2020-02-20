@@ -5,13 +5,27 @@
 
 using namespace std;
 
-struct lib_t {
+struct lib {
   int delay;
   int bpd; // books per day
   vector<tuple<int,int> > books;
-} libraries [100000];
+};
 
-void printlib (lib_t l);
+void printlib (lib l) {
+  cout << "Delay: " << l.delay << endl;
+  cout << "Books per day: " << l.bpd << endl;
+
+  cout << "Books: [";
+  for (int i = 0; i < l.books.size(); i++) {
+    tuple<int,int> t = l.books[i];
+    cout << "(" << get<0>(t) << "," << get<1>(t) << ") ";
+  }
+  cout << "]" << endl;
+}
+
+bool libCompare(const lib &l1, const lib &l2) {
+  return true;
+}
 
 int main() {
   int books, libs, days;
@@ -24,12 +38,14 @@ int main() {
     book_scores.push_back(score);
   }
 
+  vector<lib> libraries;
   for (int i = 0; i < libs; i++) {
     int bks, delay, bpd;
     cin >> bks >> delay >> bpd;
 
-    libraries[i].delay = delay;
-    libraries[i].bpd = bpd;
+    lib l;
+    l.delay = delay;
+    l.bpd = bpd;
 
     vector<tuple<int,int> > bv;
     for (int j = 0; j < bks; j++) {
@@ -37,23 +53,17 @@ int main() {
       cin >> b;
       bv.push_back(make_pair(book_scores[b], b));
     }
+    // Libraries store their books in decreasing order of score
     sort(bv.rbegin(), bv.rend());
 
-    libraries[i].books = bv;
-    printlib (libraries[i]);
+    l.books = bv;
+    //printlib (l);
+    libraries.push_back(l);
   }
+
+  // Sort the libraries
+  sort(libraries.begin(), libraries.end(), libCompare);
 
   return 0;
 }
 
-void printlib (lib_t l) {
-  cout << "Delay: " << l.delay << endl;
-  cout << "Books per day: " << l.bpd << endl;
-
-  cout << "Books: [";
-  for (int i = 0; i < l.books.size(); i++) {
-    tuple<int,int> t = l.books[i];
-    cout << "(" << get<0>(t) << "," << get<1>(t) << ") ";
-  }
-  cout << "]" << endl;
-}
