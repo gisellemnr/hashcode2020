@@ -6,6 +6,7 @@
 using namespace std;
 
 struct lib {
+  int id;
   int delay;
   int bpd; // books per day
   vector<tuple<int,int> > books;
@@ -23,8 +24,19 @@ void printlib (lib l) {
   cout << "]" << endl;
 }
 
+int score(lib l) {
+  int bpd = l.bpd;
+
+  int maxday = 0;
+  for (int i = 0; i < bpd; i++) {
+    maxday += get<0>(l.books[i]);
+  }
+
+  return maxday;
+}
+
 bool libCompare(const lib &l1, const lib &l2) {
-  return true;
+  return score(l1) > score(l2);
 }
 
 int main() {
@@ -44,6 +56,7 @@ int main() {
     cin >> bks >> delay >> bpd;
 
     lib l;
+    l.id = i;
     l.delay = delay;
     l.bpd = bpd;
 
@@ -63,6 +76,26 @@ int main() {
 
   // Sort the libraries
   sort(libraries.begin(), libraries.end(), libCompare);
+
+  // Generate output file given the sorted libraries
+  int days_spent = 0;
+  int i = 0;
+  while (days_spent < days && i < libs) {
+    lib l = libraries[i];
+    int id = l.id;
+
+    int days_left = days - days_spent;
+    int books_scanned = l.bpd * days_left;
+    if (books_scanned > l.books.size()) books_scanned = l.books.size();
+
+    cout << id << " " << books_scanned << endl;
+    for (int b = 0; b < books_scanned; b++) {
+      cout << get<1>(l.books[b]) << " ";
+    }
+    cout << endl;
+
+    i++;
+  }
 
   return 0;
 }
